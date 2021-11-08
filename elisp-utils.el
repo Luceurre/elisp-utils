@@ -54,6 +54,30 @@ $0)
 " fun-name))
   )
 
+(defun elisp-utils//get-function-name ()
+  "Return function name under point, nil if none."
+  (save-excursion
+    (beginning-of-defun)
+    (forward-char)
+    (let ((word-at-point (thing-at-point 'word t)))
+      (if (not (equal word-at-point "defun"))
+          (message "Not inside a function.")
+        (forward-char 6)
+        (car (last
+              (s-split "/" (thing-at-point 'sexp t) t)
+              ))
+      )
+    )
+  )
+)
+
+(defun elisp-utils//get-current-file-test-file ()
+  "Return current file associated test file using ert-runner conventions."
+    (concat (f-parent (buffer-file-name)) "/test/" (f-base(buffer-file-name)) "-test" ".el")
+  )
+
+
+
 (provide 'elisp-utils)
 
 ;;; elisp-utils.el ends here
