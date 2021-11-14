@@ -19,5 +19,28 @@
   )
 
 
+(ert-deftest get-associated-function-name-for-test/inside-test()
+  "Should return associated function name when inside a test."
+  (with-temp-buffer
+    (insert "(ert-deftest get-associated-function-name-for-test/inside-test()
+  \"Should return associated function name when inside a test.\"
+  (with-temp-buffer
+    (insert ""))
+  )")
+    (should (equal (elisp-utils//get-associated-function-name-for-test) "get-associated-function-name-for-test"))
+    )
+  )
 
 ;;; elisp-utils-test.el ends here
+
+(ert-deftest get-associated-function-name-for-test/outside-test()
+  "Should return nil when outside a test"
+  (with-temp-buffer
+    (insert "(defun get-associated-function-name-for-test/inside-test()
+  \"Should return associated function name when inside a test.\"
+  (with-temp-buffer
+    (insert ""))
+  )")
+    (should (equal (elisp-utils//get-associated-function-name-for-test) nil))
+    )
+  )
